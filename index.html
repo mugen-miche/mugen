@@ -1,13 +1,479 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="mugen — développeur web freelance à Cotonou, Bénin." />
-    <title>mugen · portfolio</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mugen — Parfait Michel · Développeur web freelance</title>
+<meta name="description" content="Portfolio de Parfait Michel (mugen), développeur web freelance basé à Cotonou, Bénin. React, Supabase, Tailwind CSS.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mugen-khaki.vercel.app">
+<meta property="og:title" content="mugen — Parfait Michel · Développeur web freelance">
+<meta property="og:description" content="Applications web modernes, livrées depuis Cotonou pour le monde entier. React · Supabase · Tailwind CSS.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23ff4d6d'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='%230a0a0f' font-weight='bold' font-family='serif'%3E%E7%84%A1%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg-soft: #101018;
+    --border: rgba(255,255,255,.08);
+    --text: #e8e8f0;
+    --muted: #9a9ab0;
+    --accent: #ff4d6d;
+    --accent-soft: rgba(255,77,109,.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--accent); color: #fff; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.1rem 5%;
+    background: rgba(10,10,15,.75);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: -.5px; }
+  .logo span { color: var(--accent); }
+  .nav-right { display: flex; align-items: center; gap: 1.6rem; }
+  .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: .92rem; transition: color .2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--accent); color: #fff !important;
+    padding: .5rem 1.1rem; border-radius: 8px; font-weight: 600;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 4px 20px var(--accent-soft); }
+  .lang-toggle {
+    display: flex; border: 1px solid var(--border); border-radius: 8px;
+    overflow: hidden;
+  }
+  .lang-toggle button {
+    background: transparent; border: none; color: var(--muted);
+    padding: .4rem .7rem; font-size: .8rem; font-weight: 700;
+    cursor: pointer; transition: all .2s;
+  }
+  .lang-toggle button.active { background: var(--accent); color: #fff; }
+
+  /* HERO */
+  header {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 5%;
+    position: relative;
+  }
+  .kanji {
+    position: absolute; right: 3%; top: 50%; transform: translateY(-50%);
+    font-size: clamp(12rem, 28vw, 26rem);
+    color: rgba(255,255,255,.035);
+    font-weight: 900;
+    user-select: none; pointer-events: none;
+    writing-mode: vertical-rl;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: .5rem;
+    color: var(--accent); font-size: .85rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 1.2rem;
+  }
+  .hero-tag::before { content: ""; width: 32px; height: 2px; background: var(--accent); }
+  h1 {
+    font-size: clamp(2.6rem, 7vw, 5rem);
+    letter-spacing: -2px; line-height: 1.05;
+    margin-bottom: 1rem;
+  }
+  h1 .accent { color: var(--accent); }
+  .hero-sub { color: var(--muted); font-size: 1.15rem; max-width: 560px; margin-bottom: 2.2rem; }
+  .hero-sub strong { color: var(--text); }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn {
+    padding: .85rem 1.7rem; border-radius: 10px;
+    text-decoration: none; font-weight: 600; font-size: .95rem;
+    transition: transform .2s, box-shadow .2s;
+    display: inline-block;
+  }
+  .btn-primary { background: var(--accent); color: #fff; border: none; cursor: pointer; }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 30px var(--accent-soft); }
+  .btn-ghost { border: 1px solid var(--border); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  section { padding: 6rem 5%; }
+  .section-title { font-size: 2rem; letter-spacing: -1px; margin-bottom: .4rem; }
+  .section-title span { color: var(--accent); }
+  .section-sub { color: var(--muted); margin-bottom: 3rem; }
+
+  /* STACK */
+  .stack-grid { display: flex; flex-wrap: wrap; gap: .8rem; }
+  .chip {
+    padding: .7rem 1.4rem; border: 1px solid var(--border);
+    border-radius: 999px; font-size: .95rem; font-weight: 500;
+    background: var(--bg-soft); transition: all .25s; cursor: default;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px); background: var(--accent-soft); }
+
+  /* PROJETS */
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.4rem; }
+  .card {
+    background: var(--bg-soft); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.8rem;
+    transition: transform .25s, border-color .25s;
+    display: flex; flex-direction: column; gap: .9rem;
+  }
+  .card:hover { transform: translateY(-6px); border-color: rgba(255,77,109,.4); }
+  .card-top { display: flex; justify-content: space-between; align-items: center; }
+  .badge {
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; padding: .3rem .8rem; border-radius: 999px;
+  }
+  .badge-client   { background: rgba(77,166,255,.12); color: #4da6ff; }
+  .badge-personnel{ background: rgba(255,196,77,.12);  color: #ffc44d; }
+  .badge-saas     { background: rgba(77,255,166,.12);  color: #4dffa6; }
+  .badge-concept  { background: rgba(199,125,255,.12); color: #c77dff; }
+  .status { font-size: .78rem; color: var(--muted); display: flex; align-items: center; gap: .45rem; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-done     { background: #4dffa6; }
+  .dot-progress { background: #ffc44d; animation: pulse 1.6s infinite; }
+  .dot-idea     { background: #c77dff; }
+  @keyframes pulse { 50% { opacity: .3; } }
+  .card h3 { font-size: 1.25rem; letter-spacing: -.5px; }
+  .card p.desc { color: var(--muted); font-size: .92rem; }
+  .card .year { color: var(--muted); font-size: .85rem; margin-top: auto; }
+  .card-links { display: flex; gap: 1rem; }
+  .card-links a { color: var(--accent); font-size: .85rem; font-weight: 600; text-decoration: none; }
+  .card-links a:hover { text-decoration: underline; }
+  .stack-line { font-size: .78rem; color: var(--accent); font-weight: 600; letter-spacing: .5px; }
+  .soon { font-size: .82rem; color: var(--muted); opacity: .7; font-style: italic; }
+
+  /* À PROPOS */
+  .about-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  .about-text p { color: var(--muted); margin-bottom: 1.2rem; }
+  .about-text strong { color: var(--text); }
+  .facts { display: flex; flex-direction: column; gap: 1rem; }
+  .fact {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem 1.4rem; border: 1px solid var(--border);
+    border-radius: 12px; background: var(--bg-soft);
+  }
+  .fact .label { color: var(--muted); font-size: .88rem; }
+  .fact .value { font-weight: 600; }
+
+  /* CONTACT */
+  #contact { text-align: center; }
+  .contact-card {
+    max-width: 620px; margin: 0 auto; padding: 3.5rem 2rem;
+    background: var(--bg-soft); border: 1px solid var(--border);
+    border-radius: 24px;
+  }
+  .contact-card h2 { font-size: 2.2rem; letter-spacing: -1px; margin-bottom: .8rem; }
+  .contact-card > p { color: var(--muted); margin-bottom: 2rem; }
+  .contact-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2.5rem; }
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
+  .contact-form label { font-size: .85rem; font-weight: 600; color: var(--muted); }
+  .contact-form input, .contact-form textarea {
+    width: 100%; padding: .85rem 1rem; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--bg);
+    color: var(--text); font-size: .95rem; font-family: inherit;
+    transition: border-color .2s;
+  }
+  .contact-form input:focus, .contact-form textarea:focus { outline: none; border-color: var(--accent); }
+  .form-note { font-size: .78rem; color: var(--muted); text-align: center; }
+
+  footer {
+    padding: 2rem 5%; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--muted); font-size: .85rem; flex-wrap: wrap; gap: 1rem;
+  }
+  .socials { display: flex; gap: 1.4rem; list-style: none; }
+  .socials a { color: var(--muted); text-decoration: none; transition: color .2s; }
+  .socials a:hover { color: var(--accent); }
+
+  /* ANIMATIONS */
+  .reveal {
+    opacity: 0; transform: translateY(36px);
+    transition: opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1);
+    will-change: opacity, transform;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: .08s; }
+  .reveal-delay-2 { transition-delay: .16s; }
+  .reveal-delay-3 { transition-delay: .24s; }
+  .kanji { transition: transform .1s linear; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  }
+  @media (max-width: 760px) {
+    .nav-links { display: none; }
+    .about-wrap { grid-template-columns: 1fr; }
+    .kanji { opacity: .5; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">mugen<span>.</span></div>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#stack" data-fr="Stack" data-en="Stack">Stack</a></li>
+      <li><a href="#projets" data-fr="Projets" data-en="Projects">Projets</a></li>
+      <li><a href="#apropos" data-fr="À propos" data-en="About">À propos</a></li>
+      <li><a class="nav-cta" href="#contact" data-fr="Me contacter" data-en="Contact me">Me contacter</a></li>
+    </ul>
+    <div class="lang-toggle">
+      <button id="btn-fr" class="active" onclick="setLang('fr')">FR</button>
+      <button id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="kanji">無限</div>
+  <p class="hero-tag" data-fr="Développeur web freelance — Cotonou, Bénin" data-en="Freelance web developer — Cotonou, Benin">Développeur web freelance — Cotonou, Bénin</p>
+  <h1 data-fr="Parfait &lt;span class='accent'&gt;Michel&lt;/span&gt;,&lt;br&gt;je construis l'infini&lt;span class='accent'&gt;.&lt;/span&gt;" data-en="Parfait &lt;span class='accent'&gt;Michel&lt;/span&gt;,&lt;br&gt;I build infinity&lt;span class='accent'&gt;.&lt;/span&gt;">Parfait <span class="accent">Michel</span>,<br>je construis l'infini<span class="accent">.</span></h1>
+  <p class="hero-sub"
+     data-fr="Aussi connu sous le nom &lt;strong&gt;mugen&lt;/strong&gt; (無限, &amp;quot;infini&amp;quot; en japonais). Je conçois des applications web modernes et performantes pour des clients du monde entier — et pour moi-même, parce que coder est une passion."
+     data-en="Also known as &lt;strong&gt;mugen&lt;/strong&gt; (無限, &amp;quot;infinity&amp;quot; in Japanese). I design modern, high-performing web applications for clients worldwide — and for myself, because coding is a passion.">
+    Aussi connu sous le nom <strong>mugen</strong> (無限, "infini" en japonais).
+    Je conçois des applications web modernes et performantes pour des clients
+    du monde entier — et pour moi-même, parce que coder est une passion.
+  </p>
+  <div class="hero-btns">
+    <a class="btn btn-primary" href="#projets" data-fr="Voir mes projets ↓" data-en="See my projects ↓">Voir mes projets ↓</a>
+    <a class="btn btn-ghost" href="https://wa.me/2290160389953" target="_blank" rel="noopener" data-fr="Discuter sur WhatsApp" data-en="Chat on WhatsApp">Discuter sur WhatsApp</a>
+  </div>
+</header>
+
+<section id="stack" class="reveal">
+  <h2 class="section-title" data-fr="Ma &lt;span&gt;stack&lt;/span&gt;" data-en="My &lt;span&gt;stack&lt;/span&gt;">Ma <span>stack</span></h2>
+  <p class="section-sub" data-fr="Les outils que j'utilise au quotidien pour livrer vite et bien." data-en="The tools I use daily to ship fast and well.">Les outils que j'utilise au quotidien pour livrer vite et bien.</p>
+  <div class="stack-grid">
+    <div class="chip reveal">React</div>
+    <div class="chip reveal reveal-delay-1">Supabase</div>
+    <div class="chip reveal reveal-delay-2">Tailwind CSS</div>
+    <div class="chip reveal reveal-delay-3">Vercel</div>
+    <div class="chip reveal reveal-delay-1">Lovable</div>
+    <div class="chip reveal reveal-delay-2">Claude IA</div>
+  </div>
+</section>
+
+<section id="projets" class="reveal">
+  <h2 class="section-title" data-fr="Mes &lt;span&gt;projets&lt;/span&gt;" data-en="My &lt;span&gt;projects&lt;/span&gt;">Mes <span>projets</span></h2>
+  <p class="section-sub" data-fr="8 projets — clients, personnels, SaaS et concepts en cours d'élaboration." data-en="8 projects — client work, personal, SaaS and concepts in the making.">8 projets — clients, personnels, SaaS et concepts en cours d'élaboration.</p>
+  <div class="projects-grid">
+
+    <div class="card reveal reveal-delay-1">
+      <div class="card-top">
+        <span class="badge badge-client">Client</span>
+        <span class="status"><span class="dot dot-done"></span><span data-fr="Livré" data-en="Shipped">Livré</span></span>
+      </div>
+      <h3>2405 Timepieces</h3>
+      <p class="desc" data-fr="Boutique e-commerce de montres de luxe — front-office client, panel admin, catalogue et panier WhatsApp." data-en="Luxury watch e-commerce store — client storefront, admin panel, catalog and WhatsApp cart.">Boutique e-commerce de montres de luxe — front-office client, panel admin, catalogue et panier WhatsApp.</p>
+      <p class="stack-line">React · Supabase · Lovable</p>
+      <span class="soon" data-fr="Bientôt en ligne" data-en="Coming soon">Bientôt en ligne</span>
+      <span class="year">2025</span>
+    </div>
+
+    <div class="card reveal reveal-delay-2">
+      <div class="card-top">
+        <span class="badge badge-client">Client</span>
+        <span class="status"><span class="dot dot-done"></span><span data-fr="Livré" data-en="Shipped">Livré</span></span>
+      </div>
+      <h3>Storze</h3>
+      <p class="desc" data-fr="Site vitrine montres de luxe, design premium dark/gold." data-en="Luxury watch showcase site, premium dark/gold design.">Site vitrine montres de luxe, design premium dark/gold.</p>
+      <p class="stack-line">React · Supabase · Lovable</p>
+      <div class="card-links">
+        <a href="https://storze-gold-watch.vercel.app" target="_blank" rel="noopener" data-fr="Voir le projet →" data-en="View project →">Voir le projet →</a>
+      </div>
+      <span class="year">2025</span>
+    </div>
+
+    <div class="card reveal reveal-delay-3">
+      <div class="card-top">
+        <span class="badge badge-saas">SaaS</span>
+        <span class="status"><span class="dot dot-progress"></span><span data-fr="En cours" data-en="In progress">En cours</span></span>
+      </div>
+      <h3>mugen-track</h3>
+      <p class="desc" data-fr="SaaS de gestion de notes pour professeurs au Bénin — abonnement parent via FedaPay." data-en="Grade management SaaS for teachers in Benin — parent subscription via FedaPay.">SaaS de gestion de notes pour professeurs au Bénin — abonnement parent via FedaPay.</p>
+      <p class="stack-line">React · Supabase · FedaPay</p>
+      <div class="card-links">
+        <a href="https://mugen-track.vercel.app" target="_blank" rel="noopener" data-fr="Voir le projet →" data-en="View project →">Voir le projet →</a>
+      </div>
+      <span class="year">2025</span>
+    </div>
+
+    <div class="card reveal reveal-delay-1">
+      <div class="card-top">
+        <span class="badge badge-concept">Concept</span>
+        <span class="status"><span class="dot dot-idea"></span><span data-fr="En conception" data-en="Designing">En conception</span></span>
+      </div>
+      <h3>Kolabo</h3>
+      <p class="desc" data-fr="Marketplace peer-to-peer étudiants UAC — cours, design, livraison. Paiement Mobile Money." data-en="Peer-to-peer marketplace for UAC students — courses, design, delivery. Mobile Money payments.">Marketplace peer-to-peer étudiants UAC — cours, design, livraison. Paiement Mobile Money.</p>
+      <p class="stack-line">React · Supabase · PWA</p>
+      <span class="soon" data-fr="Bientôt en ligne" data-en="Coming soon">Bientôt en ligne</span>
+      <span class="year">2025</span>
+    </div>
+
+    <div class="card reveal reveal-delay-2">
+      <div class="card-top">
+        <span class="badge badge-client">Client</span>
+        <span class="status"><span class="dot dot-done"></span><span data-fr="Livré" data-en="Shipped">Livré</span></span>
+      </div>
+      <h3>DayBook</h3>
+      <p class="desc" data-fr="Gestion quotidienne pour imprimeries — recettes, dépenses, crédits. Deux rôles sécurisés par RLS Supabase." data-en="Daily management for print shops — income, expenses, credits. Two roles secured by Supabase RLS.">Gestion quotidienne pour imprimeries — recettes, dépenses, crédits. Deux rôles sécurisés par RLS Supabase.</p>
+      <p class="stack-line">React · Supabase · Tailwind</p>
+      <div class="card-links">
+        <a href="https://daybook-9ogm.vercel.app" target="_blank" rel="noopener" data-fr="Voir le projet →" data-en="View project →">Voir le projet →</a>
+      </div>
+      <span class="year">2024</span>
+    </div>
+
+    <div class="card reveal reveal-delay-3">
+      <div class="card-top">
+        <span class="badge badge-client">Client</span>
+        <span class="status"><span class="dot dot-done"></span><span data-fr="Livré" data-en="Shipped">Livré</span></span>
+      </div>
+      <h3>TrackSal</h3>
+      <p class="desc" data-fr="Gestion des ventes et facturation — catalogue de ~365 produits sur 8 catégories." data-en="Sales management and invoicing — ~365 products catalog across 8 categories.">Gestion des ventes et facturation — catalogue de ~365 produits sur 8 catégories.</p>
+      <p class="stack-line">React · Supabase · Lovable</p>
+      <span class="soon" data-fr="Bientôt en ligne" data-en="Coming soon">Bientôt en ligne</span>
+      <span class="year">2024</span>
+    </div>
+
+    <div class="card reveal reveal-delay-1">
+      <div class="card-top">
+        <span class="badge badge-personnel">Personnel</span>
+        <span class="status"><span class="dot dot-done"></span><span data-fr="Livré" data-en="Shipped">Livré</span></span>
+      </div>
+      <h3>DaySell</h3>
+      <p class="desc" data-fr="Tracker de ventes quotidiennes pour revendeurs d'eau en sachet et de glace." data-en="Daily sales tracker for sachet water and ice resellers.">Tracker de ventes quotidiennes pour revendeurs d'eau en sachet et de glace.</p>
+      <p class="stack-line">React · Supabase · Lovable</p>
+      <span class="soon" data-fr="Bientôt en ligne" data-en="Coming soon">Bientôt en ligne</span>
+      <span class="year">2024</span>
+    </div>
+
+    <div class="card reveal reveal-delay-2">
+      <div class="card-top">
+        <span class="badge badge-personnel">Personnel</span>
+        <span class="status"><span class="dot dot-progress"></span><span data-fr="En cours" data-en="In progress">En cours</span></span>
+      </div>
+      <h3>Koba</h3>
+      <p class="desc" data-fr="App de finances personnelles — goals, dettes, notes. Pensée pour le FCFA et Mobile Money." data-en="Personal finance app — goals, debts, notes. Built for FCFA and Mobile Money.">App de finances personnelles — goals, dettes, notes. Pensée pour le FCFA et Mobile Money.</p>
+      <p class="stack-line">React · Supabase · Tiptap</p>
+      <span class="soon" data-fr="Bientôt en ligne" data-en="Coming soon">Bientôt en ligne</span>
+      <span class="year">2024</span>
+    </div>
+
+  </div>
+</section>
+
+<section id="apropos" class="reveal">
+  <h2 class="section-title" data-fr="À &lt;span&gt;propos&lt;/span&gt;" data-en="&lt;span&gt;About&lt;/span&gt; me">À <span>propos</span></h2>
+  <p class="section-sub" data-fr="mugen — 無限 — l'infini. Un nom, une ambition." data-en="mugen — 無限 — infinity. A name, an ambition.">mugen — 無限 — l'infini. Un nom, une ambition.</p>
+  <div class="about-wrap">
+    <div class="about-text">
+      <p data-fr="Je suis &lt;strong&gt;Parfait Michel&lt;/strong&gt;, développeur web freelance basé à &lt;strong&gt;Cotonou, au Bénin&lt;/strong&gt;. Sous le pseudo &lt;strong&gt;mugen&lt;/strong&gt;, je crée des applications web modernes qui aident les entreprises et les entrepreneurs à digitaliser leurs idées."
+         data-en="I'm &lt;strong&gt;Parfait Michel&lt;/strong&gt;, a freelance web developer based in &lt;strong&gt;Cotonou, Benin&lt;/strong&gt;. Under the handle &lt;strong&gt;mugen&lt;/strong&gt;, I build modern web applications that help businesses and entrepreneurs digitize their ideas.">
+        Je suis <strong>Parfait Michel</strong>, développeur web freelance basé à <strong>Cotonou, au Bénin</strong>. Sous le pseudo <strong>mugen</strong>, je crée des applications web modernes qui aident les entreprises et les entrepreneurs à digitaliser leurs idées.
+      </p>
+      <p data-fr="Ma marque, &lt;strong&gt;localdev&lt;/strong&gt;, reflète ma conviction : un bon développeur n'a pas besoin d'être à Paris ou à San Francisco pour livrer un travail de qualité internationale. La preuve par les projets."
+         data-en="My brand, &lt;strong&gt;localdev&lt;/strong&gt;, reflects my conviction: a good developer doesn't need to be in Paris or San Francisco to deliver international-quality work. The projects speak for themselves.">
+        Ma marque, <strong>localdev</strong>, reflète ma conviction : un bon développeur n'a pas besoin d'être à Paris ou à San Francisco pour livrer un travail de qualité internationale. La preuve par les projets.
+      </p>
+      <p data-fr="Quand je ne travaille pas pour des clients, je construis mes propres produits — parce que la meilleure façon de progresser, c'est de créer."
+         data-en="When I'm not working for clients, I build my own products — because the best way to improve is to create.">
+        Quand je ne travaille pas pour des clients, je construis mes propres produits — parce que la meilleure façon de progresser, c'est de créer.
+      </p>
+    </div>
+    <div class="facts">
+      <div class="fact reveal reveal-delay-1"><span class="label">📍 Localisation</span><span class="value">Cotonou, Bénin</span></div>
+      <div class="fact reveal reveal-delay-2"><span class="label" data-fr="💼 Statut" data-en="💼 Status">💼 Statut</span><span class="value" data-fr="Freelance" data-en="Freelance">Freelance</span></div>
+      <div class="fact reveal reveal-delay-3"><span class="label" data-fr="🏷️ Marque" data-en="🏷️ Brand">🏷️ Marque</span><span class="value">localdev</span></div>
+      <div class="fact reveal reveal-delay-1"><span class="label">🈶 Handle</span><span class="value">mugen (無限)</span></div>
+      <div class="fact reveal reveal-delay-2"><span class="label" data-fr="🚀 Projets livrés" data-en="🚀 Projects shipped">🚀 Projets livrés</span><span class="value">5 clients + personnels</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="reveal">
+  <div class="contact-card">
+    <h2 data-fr="Un projet en tête ?" data-en="Have a project in mind?">Un projet en tête ?</h2>
+    <p data-fr="Disponible pour de nouvelles missions freelance. Remplis le formulaire ou écris-moi directement — réponse rapide, de Cotonou jusqu'à chez toi."
+       data-en="Available for new freelance work. Fill in the form or message me directly — fast replies, from Cotonou to wherever you are.">
+      Disponible pour de nouvelles missions freelance. Remplis le formulaire ou écris-moi directement — réponse rapide, de Cotonou jusqu'à chez toi.
+    </p>
+    <div class="contact-actions">
+      <a class="btn btn-primary" href="https://wa.me/2290160389953" target="_blank" rel="noopener">💬 WhatsApp — +229 01 60 38 99 53</a>
+    </div>
+    <form class="contact-form" id="contact-form">
+      <div>
+        <label for="cf-name" data-fr="Ton nom" data-en="Your name">Ton nom</label>
+        <input type="text" id="cf-name" placeholder="Ex: Jean Dupont" required>
+      </div>
+      <div>
+        <label for="cf-msg" data-fr="Ton projet / message" data-en="Your project / message">Ton projet / message</label>
+        <textarea id="cf-msg" rows="4" placeholder="Décris ton projet en quelques lignes..." required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" data-fr="Envoyer via WhatsApp →" data-en="Send via WhatsApp →">Envoyer via WhatsApp →</button>
+      <p class="form-note" data-fr="Envoie directement dans WhatsApp, sans serveur ni base de données." data-en="Opens WhatsApp directly — no server, no database needed.">Envoie directement dans WhatsApp, sans serveur ni base de données.</p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Parfait Michel — mugen · localdev</span>
+  <ul class="socials">
+    <li><a href="https://wa.me/2290160389953" target="_blank" rel="noopener">WhatsApp</a></li>
+  </ul>
+  <span data-fr="Fait avec ♾️ à Cotonou, Bénin" data-en="Made with ♾️ in Cotonou, Benin">Fait avec ♾️ à Cotonou, Bénin</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-fr]').forEach(el => {
+      el.innerHTML = el.dataset[lang];
+    });
+    document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    localStorage.setItem('mugen-lang', lang);
+  }
+  const savedLang = localStorage.getItem('mugen-lang');
+  if (savedLang && savedLang !== 'fr') setLang(savedLang);
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  const kanji = document.querySelector('.kanji');
+  window.addEventListener('scroll', () => {
+    kanji.style.transform = `translateY(calc(-50% + ${window.scrollY * 0.15}px))`;
+  }, { passive: true });
+
+  document.getElementById('contact-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('cf-name').value.trim();
+    const msg  = document.getElementById('cf-msg').value.trim();
+    const lang = document.documentElement.lang;
+    const text = lang === 'en'
+      ? `Hello mugen! I'm ${name}. ${msg}`
+      : `Bonjour mugen ! Je m'appelle ${name}. ${msg}`;
+    window.open(`https://wa.me/2290160389953?text=${encodeURIComponent(text)}`, '_blank');
+  });
+</script>
+</body>
 </html>
